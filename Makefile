@@ -30,6 +30,8 @@ clean:
 
 cleanall: clean
 	rm -rf bin/$(TARGET)
+	@echo "Now we are squeaky :3"
 
 install: $(BINDIR)/$(TARGET)
 	cp $< $(INPATH)
+
