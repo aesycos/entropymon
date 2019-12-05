@@ -22,7 +22,7 @@ $(TARGET): $(OBJ)
 	@echo "LD $^"
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	@$(CC) $(CFLAGS) -I$(INC) -c -o $@ $<
+	@$(CC) -I$(INC) -c -o $@ $<
 	@echo "CC $^"
 
 clean: 
