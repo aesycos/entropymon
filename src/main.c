@@ -10,29 +10,29 @@ int getEntropy();
 void flush_entropy();
 int toPercentage( int part, int max );
 
-int main( int argc, char ** argv )
+int main( void)
 {
     int x, y, c = 0;
     MEVENT event;
-    
+
     initscr();
     cbreak();
     noecho();
     clear();
-    
+
     mousemask( BUTTON1_CLICKED, NULL );
     curs_set( 0 );
-    
+
     getmaxyx( stdscr, y, x );
     WINDOW * gauge = newwin( y, x, 0, 0 );
     keypad( gauge, TRUE );
     wtimeout( gauge, 250 );
-    
+
     while( 1 )
     {
-        // check for mouse button and flush /dev/random if pressed 
+        // check for mouse button and flush /dev/random if pressed
         c = wgetch( gauge );
-        if ( c == KEY_MOUSE ) 
+        if ( c == KEY_MOUSE )
         {
             if ( getmouse( &event ) == OK )
             {
@@ -43,7 +43,7 @@ int main( int argc, char ** argv )
                 }
             }
         }
-       
+
         // Gotta be a better way to redraw the gauge
         getmaxyx( stdscr, y, x );
         x = 5;
@@ -93,7 +93,7 @@ int getEntropy()
 
     if ( !(fp = fopen( "/proc/sys/kernel/random/entropy_avail", "r" ) ) )
         return entropy;
-    
+
     fread( buff, 1, 4, fp );
     fclose(fp);
 
@@ -105,17 +105,19 @@ void flush_entropy()
 {
     // TODO Find a better was to clear /dev/random
     // preferrably all in one call to flush_entropy
-    
-    unsigned char buffer[4096];
 
-    int fp;
+    unsigned char buffer;
 
-    if ( !(fp = open( "/dev/random", O_RDONLY ) ) )
+    FILE *fp;
+
+    if ( !(fp = fopen( "/dev/random", "rb" ) ) )
         return;
 
-    read( fp, buffer, 4096 );
-    close(fp);
-    
+    fseek ( fp, 0, SEEK_END );
+    fread( &buffer, 1, 1, fp );
+
+    fclose(fp);
+
     return;
 }
 
@@ -123,4 +125,3 @@ int toPercentage( int part, int max )
 {
     return (int)(((double) part / (double) max ) * 100);
 }
-
