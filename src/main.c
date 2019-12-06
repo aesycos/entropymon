@@ -10,7 +10,7 @@ int getEntropy();
 void flush_entropy();
 int toPercentage( int part, int max );
 
-int main( void)
+int main( int argc, char ** argv )
 {
     int x, y, c = 0;
     MEVENT event;
